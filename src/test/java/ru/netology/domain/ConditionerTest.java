@@ -1,6 +1,8 @@
 package ru.netology.domain;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.concurrent.Callable;
 
@@ -26,21 +28,42 @@ public class ConditionerTest {
 
     }
 
-    @Test
-public void increaseCurrentTemperature(){
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "'Temperature from 10',10,11",
+                    "'Temperature from 0',0,1",
+                    "'Temperature from 30',30,30",
+                    "'Temperature from 15',15,16",
+            }
+    )
+
+public void increaseCurrentTemperature(String name, int currentTemperature, int expected){
     Conditioner conditioner = new Conditioner();
-    conditioner.setCurrentTemperature(12);
+    conditioner.setMaxTemperature(30);
+    conditioner.setCurrentTemperature(currentTemperature);
     conditioner.increaseCurrentTemperature();
-    assertEquals(conditioner.getMaxTemperature(), conditioner.getCurrentTemperature());
+    int actual = conditioner.getCurrentTemperature();
+    assertEquals(expected, actual);
     }
 
-    @Test
-    public void decreaseCurrentTemperature(){
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "'Temperature from 9',9,9",
+                    "'Temperature from 10',10,9",
+                    "'Temperature from 20',20,19",
+            }
+    )
+
+    public void decreaseCurrentTemperature(String name, int currentTemperature, int expected){
         Conditioner conditioner = new Conditioner();
-        conditioner.setCurrentTemperature(21);
-        conditioner.setMinTemperature(7);
+        conditioner.setCurrentTemperature(currentTemperature);
+        conditioner.setMinTemperature(9);
         conditioner.decreaseCurrentTemperature();
-        assertEquals(conditioner.getMinTemperature(), conditioner.getCurrentTemperature());
+        int actual = conditioner.getCurrentTemperature();
+        assertEquals(expected, actual);
     }
 }
 
