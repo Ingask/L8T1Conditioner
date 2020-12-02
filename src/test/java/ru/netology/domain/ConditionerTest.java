@@ -19,29 +19,22 @@ public class ConditionerTest {
         assertEquals(expected, conditioner.getName());
     }
 
-    @Test
-    public void checkTemperature(){
-        Conditioner conditioner = new Conditioner();
-        assertEquals(0, conditioner.getCurrentTemperature());
-        conditioner.setCurrentTemperature(20);
-        assertEquals(20, conditioner.getCurrentTemperature());
 
-    }
 
     @ParameterizedTest
     @CsvSource(
             value = {
-                    "'Temperature from 10',10,11",
-                    "'Temperature from 0',0,1",
-                    "'Temperature from 30',30,30",
-                    "'Temperature from 15',15,16",
+                    "'Temperature from min',30,9,10,9",
+                    "'Temperature from max',30,30,30,9",
+                    "'Temperature from 15',30,15,16,9",
             }
     )
 
-public void increaseCurrentTemperature(String name, int currentTemperature, int expected){
+public void increaseCurrentTemperature(String name, int max, int currentTemp, int expected, int min){
     Conditioner conditioner = new Conditioner();
-    conditioner.setMaxTemperature(30);
-    conditioner.setCurrentTemperature(currentTemperature);
+    conditioner.setMaxTemperature(max);
+    conditioner.setMinTemperature(min);
+    conditioner.setCurrentTemperature(currentTemp);
     conditioner.increaseCurrentTemperature();
     int actual = conditioner.getCurrentTemperature();
     assertEquals(expected, actual);
@@ -51,16 +44,17 @@ public void increaseCurrentTemperature(String name, int currentTemperature, int 
     @ParameterizedTest
     @CsvSource(
             value = {
-                    "'Temperature from 9',9,9",
-                    "'Temperature from 10',10,9",
-                    "'Temperature from 20',20,19",
+                    "'Temperature from min',9,9,9,30",
+                    "'Temperature from 15',9,15,14,30",
+                    "'Temperature from max',9,30,29,30",
             }
     )
 
-    public void decreaseCurrentTemperature(String name, int currentTemperature, int expected){
+    public void decreaseCurrentTemperature(String name, int min, int currentTemp, int expected, int max){
         Conditioner conditioner = new Conditioner();
-        conditioner.setCurrentTemperature(currentTemperature);
-        conditioner.setMinTemperature(9);
+        conditioner.setMinTemperature(min);
+        conditioner.setMaxTemperature(max);
+        conditioner.setCurrentTemperature(currentTemp);
         conditioner.decreaseCurrentTemperature();
         int actual = conditioner.getCurrentTemperature();
         assertEquals(expected, actual);
